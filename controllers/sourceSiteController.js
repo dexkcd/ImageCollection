@@ -2,22 +2,26 @@
 const fs = require('fs');
 const axios = require('axios');
 let posts = [];
+let promises = [];
 
 let controller = {
     getData: async function (req, res) {
         try
         {
-            let postsPromise = await fetchBrandPosts();
+            await fetchBrandPosts();
             let postsToRender = [];
-            for(let key in posts)
-            {
-                console.log(key);
-                postsToRender.push(posts[key]);
-            }
-            res.render('index', {
-                title: "posts",
-                body: postsToRender
+            axios.all(promises).then(function() {
+                for(let key in posts)
+                {
+                    postsToRender.push(posts[key]);
+                }
+                res.render('index', {
+                    title: "posts",
+                    body: postsToRender
+                });
             });
+
+
         }
         catch(e)
         {
@@ -41,7 +45,7 @@ function fetchBrandPosts()
     brands.forEach( function(brand_uri)
     {
 
-        axios.get("https://"+brand_uri+'/wp-json/wp/v2/posts?'+helpers.buildRequestString())
+        let promise = axios.get("https://"+brand_uri+'/wp-json/wp/v2/posts?'+helpers.buildRequestString())
             .then((response) => {
                 response.data.forEach(function(post){
                     posts[post.id+""+brand_uri] = post;
@@ -51,6 +55,7 @@ function fetchBrandPosts()
                     console.error(error);
                 }
             );
+        promises.push(promise);
     });
 
 };
