@@ -15,9 +15,14 @@ let controller = {
                 {
                     postsToRender.push(posts[key]);
                 }
+
+                postsToRender = postsToRender.sort(function (postA, postB) {
+                   return Date.parse(postB.date) - Date.parse(postA.date)
+                });
+
                 res.render('index', {
                     title: "posts",
-                    body: postsToRender
+                    body: postsToRender.slice(0, 10)
                 });
             });
 
@@ -34,7 +39,7 @@ let controller = {
 };
 
 let helpers = {
-    buildRequestString(page=1,per_page=10,order_by="date",order="desc") {
+    buildRequestString(page=1,per_page=20,order_by="date",order="desc") {
         return "page="+page+"&per_page="+per_page+"&orderby="+order_by+"&order="+order;
     },
 
@@ -64,6 +69,7 @@ function fetchBrandPosts()
 const brands = [
     "www.teknikensvarld.se",
     "www.alltommat.se",
-    "www.skonahem.com"
+    "www.skonahem.com",
+    "mama.nu"
 ];
 module.exports = controller;
