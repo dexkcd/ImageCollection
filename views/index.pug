@@ -5,4 +5,5 @@ block content
   p Welcome to #{title}
   ul
     each val in body
-      li=  val.featured_image.src
+      li
+        a(href=val.link): img(src=val.featured_image.src, class="postFeatureImage")
