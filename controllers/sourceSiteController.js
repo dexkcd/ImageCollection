@@ -1,6 +1,10 @@
 "use strict";
 const fs = require('fs');
 const axios = require('axios');
+const NodeCache = require( "node-cache" );
+const responseCache = new NodeCache( { stdTTL: 60, checkperiod: 70 } );
+
+
 let posts = [];
 let promises = [];
 
@@ -50,17 +54,28 @@ function fetchBrandPosts()
     brands.forEach( function(brand_uri)
     {
 
-        let promise = axios.get("https://"+brand_uri+'/wp-json/wp/v2/posts?'+helpers.buildRequestString())
-            .then((response) => {
-                response.data.forEach(function(post){
-                    posts[post.id+""+brand_uri] = post;
-                });
-            })
-            .catch((error) => {
-                    console.error(error);
-                }
-            );
-        promises.push(promise);
+        try
+        {
+            let value = responseCache.get( brand_uri, true );
+            value.forEach(function(post){
+                posts[post.id+""+brand_uri] = post;
+            });
+        }
+        catch( err ){
+            let promise = axios.get("https://"+brand_uri+'/wp-json/wp/v2/posts?'+helpers.buildRequestString())
+                .then((response) => {
+                    response.data.forEach(function(post){
+                        posts[post.id+""+brand_uri] = post;
+                    });
+                    responseCache.set(brand_uri, response.data, 60);
+                })
+                .catch((error) => {
+                        console.error(error);
+                    }
+                );
+            promises.push(promise);
+        }
+
     });
 
 }
