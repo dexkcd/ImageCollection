@@ -4,7 +4,6 @@ const axios = require('axios');
 const NodeCache = require( "node-cache" );
 const responseCache = new NodeCache( { stdTTL: 60, checkperiod: 70 } );
 
-
 let posts = [];
 let promises = [];
 
@@ -51,6 +50,19 @@ let helpers = {
 
 function fetchBrandPosts()
 {
+    let brands = [];
+
+    try
+    {
+        brands = JSON.parse(fs.readFileSync('config/brands.json', 'utf8'));
+    }
+    catch ( err )
+    {
+        brands = default_brands;
+    }
+
+
+
     brands.forEach( function(brand_uri)
     {
 
@@ -81,7 +93,7 @@ function fetchBrandPosts()
 }
 
 
-const brands = [
+const default_brands = [
     "www.teknikensvarld.se",
     "www.alltommat.se",
     "www.skonahem.com",
