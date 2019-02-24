@@ -10,6 +10,6 @@ const requestHeaderMiddleware = (req,res,next) =>{
         next(createError(401));
     }
 
-}
+};
 
 module.exports = requestHeaderMiddleware;
