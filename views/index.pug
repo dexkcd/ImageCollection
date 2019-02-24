@@ -2,8 +2,12 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
-  ul
+  .mui-col-md-12
     each val in body
-      li
-        a(href=val.link): img(src=val.featured_image.src, class="postFeatureImage")
+      .mui-col-md-12
+        .mui-col-md-8.mui-col-md-offset-2
+          h3= val.title.rendered
+          p= val.date
+          a(href=val.link): img(src=val.featured_image.src, class="postFeatureImage")
+        .mui-divider
+

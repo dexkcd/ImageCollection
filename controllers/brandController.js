@@ -25,7 +25,7 @@ let controller = {
                 });
 
                 res.render('index', {
-                    title: "posts",
+                    title: "Senaste Inläggens",
                     body: postsToRender.slice(0, 10)
                 });
             });
