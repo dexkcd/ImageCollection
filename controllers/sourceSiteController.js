@@ -63,7 +63,7 @@ function fetchBrandPosts()
         promises.push(promise);
     });
 
-};
+}
 
 
 const brands = [
